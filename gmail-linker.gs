@@ -38,33 +38,24 @@ function GetURLs ()
       //Loop over all messages in thread
       for (var j = 0; j < messages[i].length; j++)
       {
-        var messageSubjectStore = messages[i][j].getSubject ();
 		var messageBodyStore = messages[i][j].getBody ();
  
         //urlGet formats (http:// or https://)
-        var urlSubject = "";
-        var urlBody = "";
-				
-		var matches = getSubject.match ( /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/);
+        var url = "";
+        var url2 = "";
+		
+		var matches = messageBodyStore.match (/https?:\/\/.*customdomainname.*.+?(?=<\/a>)/);
         if (matches)
         {
-          urlSubject = matches[1];
-          urlBody = matches[2];
+          messageData.push(matches);
         }
-        else
-        {
-          email = mailFrom;
-        }
- 
-        //Add data
-        addressesOnly.push (urlGet);
-        messageData.push ([url]);
+        
       }
     }
   }
- 
+ Logger.log(messageData);
   //Add data to sheet
-  sheet.getRange (1, 1, messageData.length, 3).setValues (messageData);
+  sheet.getRange (1, 1, messageData.length, 1).setValues(messageData);
 }
  
 //Add sheet menu item for Extract script call
@@ -78,7 +69,6 @@ function onOpen ()
  
   sheet.addMenu ("Get Links", menu);    
 }
-
 
 
 //URL Matching Regex
